@@ -4,8 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
 
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.ScrollIntoViewOptions.Block.center;
 import static com.codeborne.selenide.ScrollIntoViewOptions.instant;
 import static com.codeborne.selenide.Selenide.*;
@@ -35,13 +34,13 @@ public class AddToCartTest {
                 .findBy(text(pizzaBigSize))
                 .shouldBe(visible).click();
 
-        int largeSizePrice = Integer.parseInt($$("button").findBy(text(addToCartButton)).$("[class*='currency_nowrap'] span").getText());
+        int largeSizePrice = Integer.parseInt($$("button").findBy(text(addToCartButton)).$("[class*='currency_nowrap'] span").shouldNotBe(animated).getText());
 
         $$("[class*='switcher_tab-label']")
                 .findBy(text(pizzaMediumSize))
                 .shouldBe(visible).click();
 
-        int mediumSizePrice = Integer.parseInt($$("button").findBy(text(addToCartButton)).$("[class*='currency_nowrap'] span").getText());
+        int mediumSizePrice = Integer.parseInt($$("button").findBy(text(addToCartButton)).$("[class*='currency_nowrap'] span").shouldNotBe(animated).getText());
 
         Assertions.assertTrue(largeSizePrice > mediumSizePrice, "Цена на большую пиццу \"" + largeSizePrice + "\" должна быть больше, чем цена на среднюю \"" + mediumSizePrice + "\"");
 
@@ -52,7 +51,7 @@ public class AddToCartTest {
 
         int ingredientPrice = Integer.parseInt($$("li[role='menuitem']").findBy(text(toppingName)).$("span [class*='currency_nowrap']").getOwnText().trim());
 
-        int finalPrice = Integer.parseInt($$("button").findBy(text(addToCartButton)).$("[class*='currency_nowrap'] span").getText());
+        int finalPrice = Integer.parseInt($$("button").findBy(text(addToCartButton)).$("[class*='currency_nowrap'] span").shouldNotBe(animated).getText());
 
         Assertions.assertEquals(finalPrice, mediumSizePrice + ingredientPrice, "Итоговая сумма должна увеличиться на цену топпинга");
 
