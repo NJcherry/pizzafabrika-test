@@ -12,13 +12,13 @@ import static com.codeborne.selenide.Selenide.*;
 public class AddToCartTest {
     private String pizzaName = "Мясное плато";
     private String toppingName = "Шампиньоны 20г";
-    private String addToCartButton = "В корзину";
-    private String pizzaBigSize = "Большая";
-    private String pizzaMediumSize = "Средняя";
-    private String textAmountCheck = "В корзине 1 шт.";
+    private String addToCartButtonText = "В корзину";
+    private String largeSizeText = "Большая";
+    private String mediumSizeText = "Средняя";
+    private String cartItemCountText = "В корзине 1 шт.";
 
     @Test
-    @DisplayName("Добавление товара в корину")
+    @DisplayName("Добавление товара в корзину")
     void addPizzaToCartTest() {
         Configuration.baseUrl = "https://pizzafabrika.ru";
         open("/vologda");
@@ -31,16 +31,16 @@ public class AddToCartTest {
                 .shouldBe(visible).click();
 
         $$("[class*='switcher_tab-label']")
-                .findBy(text(pizzaBigSize))
+                .findBy(text(largeSizeText))
                 .shouldBe(visible).click();
 
-        int largeSizePrice = Integer.parseInt($$("button").findBy(text(addToCartButton)).$("[class*='currency_nowrap'] span").shouldNotBe(animated).getText());
+        int largeSizePrice = Integer.parseInt($$("button").findBy(text(addToCartButtonText)).$("[class*='currency_nowrap'] span").shouldNotBe(animated).getText());
 
         $$("[class*='switcher_tab-label']")
-                .findBy(text(pizzaMediumSize))
+                .findBy(text(mediumSizeText))
                 .shouldBe(visible).click();
 
-        int mediumSizePrice = Integer.parseInt($$("button").findBy(text(addToCartButton)).$("[class*='currency_nowrap'] span").shouldNotBe(animated).getText());
+        int mediumSizePrice = Integer.parseInt($$("button").findBy(text(addToCartButtonText)).$("[class*='currency_nowrap'] span").shouldNotBe(animated).getText());
 
         Assertions.assertTrue(largeSizePrice > mediumSizePrice, "Цена на большую пиццу \"" + largeSizePrice + "\" должна быть больше, чем цена на среднюю \"" + mediumSizePrice + "\"");
 
@@ -51,20 +51,20 @@ public class AddToCartTest {
 
         int ingredientPrice = Integer.parseInt($$("li[role='menuitem']").findBy(text(toppingName)).$("span [class*='currency_nowrap']").getOwnText().trim());
 
-        int finalPrice = Integer.parseInt($$("button").findBy(text(addToCartButton)).$("[class*='currency_nowrap'] span").shouldNotBe(animated).getText());
+        int finalPrice = Integer.parseInt($$("button").findBy(text(addToCartButtonText)).$("[class*='currency_nowrap'] span").shouldNotBe(animated).getText());
 
         Assertions.assertEquals(finalPrice, mediumSizePrice + ingredientPrice, "Итоговая сумма должна увеличиться на цену топпинга");
 
         $$("[class*='editor-buttons_editor']")
-                .findBy(text(addToCartButton))
+                .findBy(text(addToCartButtonText))
                 .shouldBe(visible).click();
 
         $$("[class*='buy-button_small']")
-                .findBy(text(textAmountCheck))
+                .findBy(text(cartItemCountText))
                 .shouldBe(visible);
 
         actions().sendKeys(Keys.ESCAPE).perform();
 
-        $("[class*='entry-card_info']").shouldHave(text(pizzaName + " " + pizzaMediumSize), text(toppingName), text(String.valueOf(finalPrice)));
+        $("[class*='entry-card_info']").shouldHave(text(pizzaName + " " + mediumSizeText), text(toppingName), text(String.valueOf(finalPrice)));
     }
 }
