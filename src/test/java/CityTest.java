@@ -11,16 +11,17 @@ import static com.codeborne.selenide.Selenide.*;
 
 public class CityTest {
     private String cityName = "Вологда";
+    private String altCityName = "Череповец";
     private String pizzaName = "Мясное плато";
     private String largeSizeText = "Большая";
     private String takeawayTabText = "С собой";
     private String deliveryTabText = "Доставка";
     private String addToCartButtonText = "В корзину";
-
+    private String selfDeliveryAddress = "Ресторан, Пошехонское шоссе, 10";
 
     @Test
-    @DisplayName("Выбор города")
-    void chooseCityTest() {
+    @DisplayName("Сохранение состояния корзины при смене города")
+    void keepCartWhenCityChangesTest() {
         Configuration.baseUrl = "https://pizzafabrika.ru";
         open("/");
 
@@ -51,7 +52,7 @@ public class CityTest {
 
         $("[class*='selfdelivery-districts-modal'] h3").shouldHave(text(cityName));
 
-        $$("[class*='list_container'] li [data-sentry-component='DistrictElement']").first().click();
+        $$("[class*='list_container'] li [class*='radioButton_label-block']").findBy(text(selfDeliveryAddress)).shouldBe(visible).click();
 
         $("[data-testid='pizza']").click();
 
@@ -73,10 +74,8 @@ public class CityTest {
         $("button [class*='current-user-location']").click();
 
         $$("[class*='list_container'] button")
-                .findBy(text(cityName))
-                .parent()       // поднялись к родителю
-                .sibling(0)     // перешли к следующему контейнеру
-                .$("button")
+                .findBy(text(altCityName))
+                .shouldBe(visible)
                 .click();
 
         $("[class*='entry-card_info']").shouldHave(text(pizzaName + " " + largeSizeText));
