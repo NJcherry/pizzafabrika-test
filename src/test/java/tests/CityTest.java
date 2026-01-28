@@ -1,15 +1,21 @@
+package tests;
+
+import base.PageManager;
 import com.codeborne.selenide.Configuration;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
+import page.BasePage;
+
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.ScrollIntoViewOptions.Block.center;
 import static com.codeborne.selenide.ScrollIntoViewOptions.instant;
 import static com.codeborne.selenide.Selenide.*;
+import static io.qameta.allure.Allure.step;
 
-public class CityTest {
+public class CityTest extends PageManager {
     private String cityName = "Вологда";
     private String altCityName = "Череповец";
     private String pizzaName = "Мясное плато";
@@ -22,8 +28,10 @@ public class CityTest {
     @Test
     @DisplayName("Сохранение состояния корзины при смене города")
     void keepCartWhenCityChangesTest() {
-        Configuration.baseUrl = "https://pizzafabrika.ru";
-        open("/");
+        step("Открываем главную страницу", () -> {
+            BasePage basePage = new BasePage();
+            basePage.openMain();
+        });
 
         $$("[class*='list_container'] button")
                 .findBy(text(cityName))
