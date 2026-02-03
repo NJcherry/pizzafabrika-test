@@ -1,11 +1,9 @@
-package tests;
+package tests_ui;
 
-import base.PageManager;
-import com.codeborne.selenide.Configuration;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
-import page.BasePage;
+import ui_pages.BasePage;
 
 
 import static com.codeborne.selenide.Condition.text;
@@ -15,7 +13,7 @@ import static com.codeborne.selenide.ScrollIntoViewOptions.instant;
 import static com.codeborne.selenide.Selenide.*;
 import static io.qameta.allure.Allure.step;
 
-public class CityTest extends PageManager {
+public class CityTest extends BaseUITest {
     private String cityName = "Вологда";
     private String altCityName = "Череповец";
     private String pizzaName = "Мясное плато";

@@ -22,7 +22,7 @@ repositories {
 }
 
 dependencies{
-    testImplementation(
+    implementation(
             'com.codeborne:selenide:7.13.0',
             'org.junit.jupiter:junit-jupiter:5.10.0',
             'io.qameta.allure:allure-selenide:2.19.0',

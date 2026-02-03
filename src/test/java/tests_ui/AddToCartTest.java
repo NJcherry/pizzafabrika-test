@@ -1,6 +1,5 @@
-package tests;
+package tests_ui;
 
-import base.PageManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,7 +8,7 @@ import org.openqa.selenium.Keys;
 import static com.codeborne.selenide.Selenide.*;
 import static io.qameta.allure.Allure.step;
 
-public class AddToCartTest extends PageManager {
+public class AddToCartTest extends BaseUITest {
     private String pizzaName = "Мясное плато";
     private String toppingName = "Шампиньоны 20г";
     private String addToCartButtonText = "В корзину";
