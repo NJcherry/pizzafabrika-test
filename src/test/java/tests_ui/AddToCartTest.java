@@ -3,70 +3,42 @@ package tests_ui;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.Keys;
+import ui_pages.CartPage;
+import ui_pages.CatalogPage;
 
-import static com.codeborne.selenide.Selenide.*;
-import static io.qameta.allure.Allure.step;
+import static ui_pages.Data.*;
 
 public class AddToCartTest extends BaseUITest {
-    private String pizzaName = "Мясное плато";
-    private String toppingName = "Шампиньоны 20г";
-    private String addToCartButtonText = "В корзину";
-    private String largeSizeText = "Большая";
-    private String mediumSizeText = "Средняя";
-    private String cartItemCountText = "В корзине 1 шт.";
+    private final CatalogPage catalog = new CatalogPage();
 
     @Test
     @DisplayName("Добавление товара в корзину")
     void addPizzaToCartTest() {
-        step("Открываем главную страницу", () -> {
-            base.openMainVologda();
-        });
+        catalog.open()
+                .goToPizzaSection()
+                .scrollAndSelectItem(PIZZA_NAME.getValue())
+                .selectLargePizza(LARGE_SIZE_TEXT.getValue());
 
-        step("Открываем раздел \"Пицца\"", () -> {
-            base.goToPizzaSection();
-        });
+        int largeSizePrice = catalog.getPizzaPrice();
 
-        step("Выбираем нужный товар", () -> {
-            base.scrollAndSelectItem(pizzaName);
-        });
+        catalog.selectMediumPizza(MEDIUM_SIZE_TEXT.getValue());
 
-        step("Выбираем большой размер пиццы", () -> {
-            base.selectLargePizza(largeSizeText);
-        });
-
-        int largeSizePrice = base.getPizzaPrice();
-
-        step("Выбираем средний размер пиццы", () -> {
-            base.selectMediumPizza(mediumSizeText);
-        });
-
-        int mediumSizePrice = base.getPizzaPrice();
+        int mediumSizePrice = catalog.getPizzaPrice();
 
         Assertions.assertTrue(largeSizePrice > mediumSizePrice, "Цена на большую пиццу \"" + largeSizePrice + "\" должна быть больше, чем цена на среднюю \"" + mediumSizePrice + "\"");
 
-        step("Выбираем доп. ингредиент", () -> {
-            base.selectTopping(toppingName);
-        });
+        catalog.selectTopping(TOPPING_NAME.getValue());
 
-        int ingredientPrice = base.getToppingPrice();
+        int ingredientPrice = catalog.getToppingPrice();
 
-        int finalPrice = base.getPizzaPrice();
+        int finalPrice = catalog.getPizzaPrice();
 
         Assertions.assertEquals(finalPrice, mediumSizePrice + ingredientPrice, "Итоговая сумма должна увеличиться на цену топпинга");
 
-        step("Добавляем товар в корзину", () -> {
-            base.addToCart(addToCartButtonText);
-        });
-
-        step("Проверяем количество добавленных товаров", () -> {
-            base.countCartItem(cartItemCountText);
-        });
-
-        actions().sendKeys(Keys.ESCAPE).perform();
-
-       step("Проверяем наличие товара в корзине", () -> {
-           base.checkCart(pizzaName, mediumSizeText, toppingName, finalPrice);
-       });
+        catalog.addToCart(ADD_TO_CART_BUTTON_TEXT.getValue())
+                .countCartItem(CART_ITEM_COUNT_TEXT.getValue())
+                .pressEscape()
+                .getPage(CartPage.class)
+                .checkCart(PIZZA_NAME.getValue(), MEDIUM_SIZE_TEXT.getValue(), TOPPING_NAME.getValue(), finalPrice);
     }
 }
